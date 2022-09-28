@@ -12,7 +12,7 @@ import (
 	"testing"
 
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
-	"github.com/kyverno/kyverno/pkg/dclient"
+	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	"github.com/kyverno/kyverno/pkg/engine"
 	"github.com/kyverno/kyverno/pkg/engine/context"
 	"github.com/kyverno/kyverno/pkg/engine/response"
@@ -71,7 +71,7 @@ type Generation struct {
 // It assumes that the project directory is 2 levels up. This means if this function is moved
 // it may not work as expected.
 func RootDir() string {
-	_, b, _, _ := runtime.Caller(0) // nolint:dogsled
+	_, b, _, _ := runtime.Caller(0) //nolint:dogsled
 	d := ospath.Join(ospath.Dir(b))
 	d = filepath.Dir(d)
 	return filepath.Dir(d)

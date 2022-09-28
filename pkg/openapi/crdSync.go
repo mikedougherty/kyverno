@@ -9,7 +9,8 @@ import (
 
 	"github.com/googleapis/gnostic/compiler"
 	openapiv2 "github.com/googleapis/gnostic/openapiv2"
-	"github.com/kyverno/kyverno/pkg/dclient"
+	"github.com/kyverno/kyverno/pkg/clients/dclient"
+	"github.com/kyverno/kyverno/pkg/metrics"
 	util "github.com/kyverno/kyverno/pkg/utils"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v3"
@@ -85,9 +86,8 @@ func (c *crdSync) Run(workers int, stopCh <-chan struct{}) {
 	}
 	// Sync CRD before kyverno starts
 	c.sync()
-
 	for i := 0; i < workers; i++ {
-		go wait.Until(c.sync, 15*time.Second, stopCh)
+		go wait.Until(c.CheckSync, 15*time.Second, stopCh)
 	}
 }
 
@@ -98,6 +98,8 @@ func (c *crdSync) sync() {
 		Version:  "v1",
 		Resource: "customresourcedefinitions",
 	}).List(context.TODO(), metav1.ListOptions{})
+
+	c.client.RecordClientQuery(metrics.ClientList, metrics.KubeDynamicClient, "CustomResourceDefinition", "")
 	if err != nil {
 		log.Log.Error(err, "could not fetch crd's from server")
 		return
@@ -245,4 +247,19 @@ func addingDefaultFieldsToSchema(crdName string, schemaRaw []byte) ([]byte, erro
 	schemaWithDefaultFields, _ := json.Marshal(schema)
 
 	return schemaWithDefaultFields, nil
+}
+
+func (c *crdSync) CheckSync() {
+	crds, err := c.client.GetDynamicInterface().Resource(runtimeSchema.GroupVersionResource{
+		Group:    "apiextensions.k8s.io",
+		Version:  "v1",
+		Resource: "customresourcedefinitions",
+	}).List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		log.Log.Error(err, "could not fetch crd's from server")
+		return
+	}
+	if len(c.controller.crdList) != len(crds.Items) {
+		c.sync()
+	}
 }

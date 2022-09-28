@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"reflect"
 
-	wildcard "github.com/kyverno/go-wildcard"
+	wildcard "github.com/kyverno/kyverno/pkg/utils/wildcard"
 	"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions"
 	apiextv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/util/sets"
@@ -97,10 +97,26 @@ func (r *Rule) HasVerifyImages() bool {
 	return r.VerifyImages != nil && !reflect.DeepEqual(r.VerifyImages, ImageVerification{})
 }
 
+// HasYAMLSignatureVerify checks for validate.manifests rule
+func (r Rule) HasYAMLSignatureVerify() bool {
+	return r.Validation.Manifests != nil && len(r.Validation.Manifests.Attestors) != 0
+}
+
 // HasImagesValidationChecks checks whether the verifyImages rule has validation checks
 func (r *Rule) HasImagesValidationChecks() bool {
 	for _, v := range r.VerifyImages {
 		if v.VerifyDigest || v.Required {
+			return true
+		}
+	}
+
+	return false
+}
+
+// HasYAMLSignatureVerify checks for validate rule
+func (p *ClusterPolicy) HasYAMLSignatureVerify() bool {
+	for _, rule := range p.Spec.Rules {
+		if rule.HasYAMLSignatureVerify() {
 			return true
 		}
 	}
@@ -331,11 +347,24 @@ func (r *Rule) ValidateMatchExcludeConflict(path *field.Path) (errs field.ErrorL
 	return append(errs, field.Invalid(path, r, "Rule is matching an empty set"))
 }
 
+// ValidateMutationRuleTargetNamespace checks if the targets are scoped to the policy's namespace
+func (r *Rule) ValidateMutationRuleTargetNamespace(path *field.Path, namespaced bool, policyNamespace string) (errs field.ErrorList) {
+	if r.HasMutate() && namespaced {
+		for idx, target := range r.Mutation.Targets {
+			if target.Namespace != "" && target.Namespace != policyNamespace {
+				errs = append(errs, field.Invalid(path.Child("targets").Index(idx).Child("namespace"), target.Namespace, "This field can be ignored or should have value of the namespace where the policy is being created"))
+			}
+		}
+	}
+	return errs
+}
+
 // Validate implements programmatic validation
-func (r *Rule) Validate(path *field.Path, namespaced bool, clusterResources sets.String) (errs field.ErrorList) {
+func (r *Rule) Validate(path *field.Path, namespaced bool, policyNamespace string, clusterResources sets.String) (errs field.ErrorList) {
 	errs = append(errs, r.ValidateRuleType(path)...)
 	errs = append(errs, r.ValidateMatchExcludeConflict(path)...)
 	errs = append(errs, r.MatchResources.Validate(path.Child("match"), namespaced, clusterResources)...)
 	errs = append(errs, r.ExcludeResources.Validate(path.Child("exclude"), namespaced, clusterResources)...)
+	errs = append(errs, r.ValidateMutationRuleTargetNamespace(path, namespaced, policyNamespace)...)
 	return errs
 }

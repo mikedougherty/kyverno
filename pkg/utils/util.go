@@ -7,10 +7,10 @@ import (
 	"strconv"
 
 	"github.com/go-logr/logr"
-	wildcard "github.com/kyverno/go-wildcard"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
-	"github.com/kyverno/kyverno/pkg/dclient"
+	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	engineutils "github.com/kyverno/kyverno/pkg/engine/utils"
+	wildcard "github.com/kyverno/kyverno/pkg/utils/wildcard"
 	"github.com/pkg/errors"
 	admissionv1 "k8s.io/api/admission/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -83,7 +83,7 @@ func contains(list []string, element string, fn func(string, string) bool) bool 
 
 // ContainsNamepace check if namespace satisfies any list of pattern(regex)
 func ContainsNamepace(patterns []string, ns string) bool {
-	return contains(patterns, ns, compareNamespaces)
+	return contains(patterns, ns, comparePatterns)
 }
 
 // ContainsString checks if the string is contained in the list
@@ -91,7 +91,11 @@ func ContainsString(list []string, element string) bool {
 	return contains(list, element, compareString)
 }
 
-func compareNamespaces(pattern, ns string) bool {
+func ContainsWildcardPatterns(patterns []string, key string) bool {
+	return contains(patterns, key, comparePatterns)
+}
+
+func comparePatterns(pattern, ns string) bool {
 	return wildcard.Match(pattern, ns)
 }
 
@@ -101,7 +105,7 @@ func compareString(str, name string) bool {
 
 // CRDsInstalled checks if the Kyverno CRDs are installed or not
 func CRDsInstalled(discovery dclient.IDiscovery) bool {
-	kyvernoCRDs := []string{"ClusterPolicy", "ClusterPolicyReport", "PolicyReport", "ClusterReportChangeRequest", "ReportChangeRequest"}
+	kyvernoCRDs := []string{"ClusterPolicy", "ClusterPolicyReport", "PolicyReport", "AdmissionReport", "BackgroundScanReport", "ClusterAdmissionReport", "ClusterBackgroundScanReport"}
 	for _, crd := range kyvernoCRDs {
 		if !isCRDInstalled(discovery, crd) {
 			return false
@@ -122,7 +126,7 @@ func isCRDInstalled(discoveryClient dclient.IDiscovery, kind string) bool {
 		return false
 	}
 
-	log.Log.Info("CRD found", "gvr", gvr.String())
+	log.Log.V(2).Info("CRD found", "gvr", gvr.String())
 	return true
 }
 
@@ -344,13 +348,12 @@ func OverrideRuntimeErrorHandler() {
 	logger := log.Log.WithName("RuntimeErrorHandler")
 	if len(runtime.ErrorHandlers) > 0 {
 		runtime.ErrorHandlers[0] = func(err error) {
-			logger.V(6).Info("runtime error: %s", err)
+			logger.V(6).Info("runtime error", "msg", err.Error())
 		}
-
 	} else {
 		runtime.ErrorHandlers = []func(err error){
 			func(err error) {
-				logger.V(6).Info("runtime error: %s", err)
+				logger.V(6).Info("runtime error", "msg", err.Error())
 			},
 		}
 	}

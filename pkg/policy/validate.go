@@ -15,8 +15,7 @@ import (
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/utils/common"
 	"github.com/kyverno/kyverno/pkg/autogen"
-	"github.com/kyverno/kyverno/pkg/dclient"
-	"github.com/kyverno/kyverno/pkg/engine"
+	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	"github.com/kyverno/kyverno/pkg/engine/context"
 	"github.com/kyverno/kyverno/pkg/engine/variables"
 	"github.com/kyverno/kyverno/pkg/openapi"
@@ -84,6 +83,9 @@ func Validate(policy kyvernov1.PolicyInterface, client dclient.Interface, mock b
 	spec := policy.GetSpec()
 	background := spec.BackgroundProcessingEnabled()
 	onPolicyUpdate := spec.GetMutateExistingOnPolicyUpdate()
+	if !mock {
+		openapi.NewCRDSync(client, openAPIController).CheckSync()
+	}
 
 	var errs field.ErrorList
 	specPath := field.NewPath("spec")
@@ -564,7 +566,6 @@ func validateMatchKindHelper(rule kyvernov1.Rule) error {
 
 // isLabelAndAnnotationsString :- Validate if labels and annotations contains only string values
 func isLabelAndAnnotationsString(rule kyvernov1.Rule) bool {
-
 	checkLabelAnnotation := func(metaKey map[string]interface{}) bool {
 		for mk := range metaKey {
 			if mk == "labels" {
@@ -937,13 +938,6 @@ func validateConfigMap(entry kyvernov1.ContextEntry) error {
 }
 
 func validateAPICall(entry kyvernov1.ContextEntry) error {
-	// Replace all variables to prevent validation failing on variable keys.
-	urlPath := variables.ReplaceAllVars(entry.APICall.URLPath, func(s string) string { return "kyvernoapicallvariable" })
-
-	if _, err := engine.NewAPIPath(urlPath); err != nil {
-		return err
-	}
-
 	// If JMESPath contains variables, the validation will fail because it's not possible to infer which value
 	// will be inserted by the variable
 	// Skip validation if a variable is detected
@@ -1066,14 +1060,11 @@ func podControllerAutoGenExclusion(policy kyvernov1.PolicyInterface) bool {
 func validateKinds(kinds []string, mock bool, client dclient.Interface, p kyvernov1.PolicyInterface) error {
 	for _, kind := range kinds {
 		gv, k := kubeutils.GetKindFromGVK(kind)
-		if k == p.GetKind() {
-			return fmt.Errorf("kind and match resource kind should not be the same")
-		}
 
 		if !mock && !kubeutils.SkipSubResources(k) && !strings.Contains(kind, "*") {
 			_, _, err := client.Discovery().FindResource(gv, k)
 			if err != nil {
-				return fmt.Errorf("unable to convert GVK to GVR for kinds %s, err: %s", kinds, err)
+				return fmt.Errorf("unable to convert GVK to GVR for kinds %s, err: %s", k, err)
 			}
 		}
 	}
