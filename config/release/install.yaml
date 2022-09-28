@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: kyverno
 ---
 apiVersion: apiextensions.k8s.io/v1
@@ -21,7 +21,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: admissionreports.kyverno.io
 spec:
   group: kyverno.io
@@ -355,7 +355,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: backgroundscanreports.kyverno.io
 spec:
   group: kyverno.io
@@ -655,7 +655,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: clusteradmissionreports.kyverno.io
 spec:
   group: kyverno.io
@@ -990,7 +990,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: clusterbackgroundscanreports.kyverno.io
 spec:
   group: kyverno.io
@@ -1290,7 +1290,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: clusterpolicies.kyverno.io
 spec:
   group: kyverno.io
@@ -3606,22 +3606,12 @@ spec:
                                       the Pod Security Standard control. See: https://kubernetes.io/docs/concepts/security/pod-security-standards/'
                                     type: string
                                   images:
-                                    description: Images is a list of matching image
-                                      patterns. Each image is the image name consisting
-                                      of the registry address, repository, image,
-                                      and tag.
-                                    items:
-                                      type: string
-                                    type: array
-                                  restrictedField:
-                                    description: RestrictedField selects the field
-                                      for the given Pod Security Standard control.
-                                      When not set, all restricted fields for the
-                                      control are selected.
-                                    type: string
-                                  values:
-                                    description: Values defines the allowed values
-                                      that can be excluded.
+                                    description: Images selects matching containers
+                                      and applies the container level PSS. Each image
+                                      is the image name consisting of the registry
+                                      address, repository, image, and tag. Empty list
+                                      matches no containers, PSS checks are applied
+                                      at the pod level only.
                                     items:
                                       type: string
                                     type: array
@@ -6404,22 +6394,12 @@ spec:
                                           https://kubernetes.io/docs/concepts/security/pod-security-standards/'
                                         type: string
                                       images:
-                                        description: Images is a list of matching
-                                          image patterns. Each image is the image
-                                          name consisting of the registry address,
-                                          repository, image, and tag.
-                                        items:
-                                          type: string
-                                        type: array
-                                      restrictedField:
-                                        description: RestrictedField selects the field
-                                          for the given Pod Security Standard control.
-                                          When not set, all restricted fields for
-                                          the control are selected.
-                                        type: string
-                                      values:
-                                        description: Values defines the allowed values
-                                          that can be excluded.
+                                        description: Images selects matching containers
+                                          and applies the container level PSS. Each
+                                          image is the image name consisting of the
+                                          registry address, repository, image, and
+                                          tag. Empty list matches no containers, PSS
+                                          checks are applied at the pod level only.
                                         items:
                                           type: string
                                         type: array
@@ -9001,22 +8981,12 @@ spec:
                                       the Pod Security Standard control. See: https://kubernetes.io/docs/concepts/security/pod-security-standards/'
                                     type: string
                                   images:
-                                    description: Images is a list of matching image
-                                      patterns. Each image is the image name consisting
-                                      of the registry address, repository, image,
-                                      and tag.
-                                    items:
-                                      type: string
-                                    type: array
-                                  restrictedField:
-                                    description: RestrictedField selects the field
-                                      for the given Pod Security Standard control.
-                                      When not set, all restricted fields for the
-                                      control are selected.
-                                    type: string
-                                  values:
-                                    description: Values defines the allowed values
-                                      that can be excluded.
+                                    description: Images selects matching containers
+                                      and applies the container level PSS. Each image
+                                      is the image name consisting of the registry
+                                      address, repository, image, and tag. Empty list
+                                      matches no containers, PSS checks are applied
+                                      at the pod level only.
                                     items:
                                       type: string
                                     type: array
@@ -11759,22 +11729,12 @@ spec:
                                           https://kubernetes.io/docs/concepts/security/pod-security-standards/'
                                         type: string
                                       images:
-                                        description: Images is a list of matching
-                                          image patterns. Each image is the image
-                                          name consisting of the registry address,
-                                          repository, image, and tag.
-                                        items:
-                                          type: string
-                                        type: array
-                                      restrictedField:
-                                        description: RestrictedField selects the field
-                                          for the given Pod Security Standard control.
-                                          When not set, all restricted fields for
-                                          the control are selected.
-                                        type: string
-                                      values:
-                                        description: Values defines the allowed values
-                                          that can be excluded.
+                                        description: Images selects matching containers
+                                          and applies the container level PSS. Each
+                                          image is the image name consisting of the
+                                          registry address, repository, image, and
+                                          tag. Empty list matches no containers, PSS
+                                          checks are applied at the pod level only.
                                         items:
                                           type: string
                                         type: array
@@ -12293,7 +12253,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: clusterpolicyreports.wgpolicyk8s.io
 spec:
   group: wgpolicyk8s.io
@@ -12662,7 +12622,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: generaterequests.kyverno.io
 spec:
   group: kyverno.io
@@ -12852,7 +12812,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: policies.kyverno.io
 spec:
   group: kyverno.io
@@ -15169,22 +15129,12 @@ spec:
                                       the Pod Security Standard control. See: https://kubernetes.io/docs/concepts/security/pod-security-standards/'
                                     type: string
                                   images:
-                                    description: Images is a list of matching image
-                                      patterns. Each image is the image name consisting
-                                      of the registry address, repository, image,
-                                      and tag.
-                                    items:
-                                      type: string
-                                    type: array
-                                  restrictedField:
-                                    description: RestrictedField selects the field
-                                      for the given Pod Security Standard control.
-                                      When not set, all restricted fields for the
-                                      control are selected.
-                                    type: string
-                                  values:
-                                    description: Values defines the allowed values
-                                      that can be excluded.
+                                    description: Images selects matching containers
+                                      and applies the container level PSS. Each image
+                                      is the image name consisting of the registry
+                                      address, repository, image, and tag. Empty list
+                                      matches no containers, PSS checks are applied
+                                      at the pod level only.
                                     items:
                                       type: string
                                     type: array
@@ -17968,22 +17918,12 @@ spec:
                                           https://kubernetes.io/docs/concepts/security/pod-security-standards/'
                                         type: string
                                       images:
-                                        description: Images is a list of matching
-                                          image patterns. Each image is the image
-                                          name consisting of the registry address,
-                                          repository, image, and tag.
-                                        items:
-                                          type: string
-                                        type: array
-                                      restrictedField:
-                                        description: RestrictedField selects the field
-                                          for the given Pod Security Standard control.
-                                          When not set, all restricted fields for
-                                          the control are selected.
-                                        type: string
-                                      values:
-                                        description: Values defines the allowed values
-                                          that can be excluded.
+                                        description: Images selects matching containers
+                                          and applies the container level PSS. Each
+                                          image is the image name consisting of the
+                                          registry address, repository, image, and
+                                          tag. Empty list matches no containers, PSS
+                                          checks are applied at the pod level only.
                                         items:
                                           type: string
                                         type: array
@@ -20566,22 +20506,12 @@ spec:
                                       the Pod Security Standard control. See: https://kubernetes.io/docs/concepts/security/pod-security-standards/'
                                     type: string
                                   images:
-                                    description: Images is a list of matching image
-                                      patterns. Each image is the image name consisting
-                                      of the registry address, repository, image,
-                                      and tag.
-                                    items:
-                                      type: string
-                                    type: array
-                                  restrictedField:
-                                    description: RestrictedField selects the field
-                                      for the given Pod Security Standard control.
-                                      When not set, all restricted fields for the
-                                      control are selected.
-                                    type: string
-                                  values:
-                                    description: Values defines the allowed values
-                                      that can be excluded.
+                                    description: Images selects matching containers
+                                      and applies the container level PSS. Each image
+                                      is the image name consisting of the registry
+                                      address, repository, image, and tag. Empty list
+                                      matches no containers, PSS checks are applied
+                                      at the pod level only.
                                     items:
                                       type: string
                                     type: array
@@ -23324,22 +23254,12 @@ spec:
                                           https://kubernetes.io/docs/concepts/security/pod-security-standards/'
                                         type: string
                                       images:
-                                        description: Images is a list of matching
-                                          image patterns. Each image is the image
-                                          name consisting of the registry address,
-                                          repository, image, and tag.
-                                        items:
-                                          type: string
-                                        type: array
-                                      restrictedField:
-                                        description: RestrictedField selects the field
-                                          for the given Pod Security Standard control.
-                                          When not set, all restricted fields for
-                                          the control are selected.
-                                        type: string
-                                      values:
-                                        description: Values defines the allowed values
-                                          that can be excluded.
+                                        description: Images selects matching containers
+                                          and applies the container level PSS. Each
+                                          image is the image name consisting of the
+                                          registry address, repository, image, and
+                                          tag. Empty list matches no containers, PSS
+                                          checks are applied at the pod level only.
                                         items:
                                           type: string
                                         type: array
@@ -23858,7 +23778,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: policyreports.wgpolicyk8s.io
 spec:
   group: wgpolicyk8s.io
@@ -24226,7 +24146,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: updaterequests.kyverno.io
 spec:
   group: kyverno.io
@@ -24615,7 +24535,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: kyverno-service-account
   namespace: kyverno
 ---
@@ -24628,7 +24548,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: kyverno:leaderelection
   namespace: kyverno
 rules:
@@ -24666,7 +24586,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: kyverno
 rules: []
 ---
@@ -24679,7 +24599,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
   name: kyverno:admin-generaterequest
 rules:
@@ -24705,7 +24625,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
   name: kyverno:admin-policies
 rules:
@@ -24732,7 +24652,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
   name: kyverno:admin-policyreport
 rules:
@@ -24759,7 +24679,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
   name: kyverno:admin-reports
 rules:
@@ -24788,7 +24708,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
   name: kyverno:admin-updaterequest
 rules:
@@ -24814,7 +24734,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: kyverno:events
 rules:
 - apiGroups:
@@ -24837,7 +24757,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: kyverno:generate
 rules:
 - apiGroups:
@@ -24884,7 +24804,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: kyverno:policies
 rules:
 - apiGroups:
@@ -24937,7 +24857,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: kyverno:userinfo
 rules:
 - apiGroups:
@@ -24960,7 +24880,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: kyverno:view
 rules:
 - apiGroups:
@@ -24981,7 +24901,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: kyverno:webhook
 rules:
 - apiGroups:
@@ -25007,7 +24927,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: kyverno:leaderelection
   namespace: kyverno
 roleRef:
@@ -25028,7 +24948,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: kyverno
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -25054,7 +24974,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: kyverno
   namespace: kyverno
 ---
@@ -25070,7 +24990,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: kyverno-metrics
   namespace: kyverno
 ---
@@ -25083,7 +25003,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: kyverno-svc
   namespace: kyverno
 spec:
@@ -25104,7 +25024,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: kyverno-svc-metrics
   namespace: kyverno
 spec:
@@ -25125,7 +25045,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: latest
+    app.kubernetes.io/version: v1.8.0-rc2
   name: kyverno
   namespace: kyverno
 spec:
@@ -25147,7 +25067,7 @@ spec:
         app.kubernetes.io/instance: kyverno
         app.kubernetes.io/name: kyverno
         app.kubernetes.io/part-of: kyverno
-        app.kubernetes.io/version: latest
+        app.kubernetes.io/version: v1.8.0-rc2
     spec:
       affinity:
         podAntiAffinity:
@@ -25182,7 +25102,7 @@ spec:
           value: kyverno-svc
         - name: TUF_ROOT
           value: /.sigstore
-        image: ghcr.io/kyverno/kyverno:latest
+        image: ghcr.io/kyverno/kyverno:v1.8.0-rc2
         imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 2
@@ -25243,7 +25163,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: ghcr.io/kyverno/kyvernopre:latest
+        image: ghcr.io/kyverno/kyvernopre:v1.8.0-rc2
         imagePullPolicy: Always
         name: kyverno-pre
         resources:
