@@ -2,7 +2,7 @@
 
 Kubernetes Native Policy Management
 
-![Version: v2.5.3](https://img.shields.io/badge/Version-v2.5.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.7.3](https://img.shields.io/badge/AppVersion-v1.7.3-informational?style=flat-square)
+![Version: 2.6.0-rc2](https://img.shields.io/badge/Version-2.6.0--rc2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.8.0-rc2](https://img.shields.io/badge/AppVersion-v1.8.0--rc2-informational?style=flat-square)
 
 ## About
 
@@ -163,8 +163,10 @@ This chart comes with default resource filters that apply exclusions on a couple
   - `SelfSubjectAccessReview`
   - `Binding`
   - `ReplicaSet`
-  - `ReportChangeRequest`
-  - `ClusterReportChangeRequest`
+  - `AdmissionReport`
+  - `ClusterAdmissionReport`
+  - `BackgroundScanReport`
+  - `ClusterBackgroundScanReport`
 - all resources created by this chart itself
 
 Those default exclusions are there to prevent disruptions as much as possible.
